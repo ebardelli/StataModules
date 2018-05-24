@@ -1,6 +1,6 @@
 ** Export balance table to excel
  * v2.0.1
-program balanceTable
+program diffTable
     syntax varlist using/ [aweight], BY(varlist max=1) strata(varlist max=1) [sheet(passthru) replace modify *]
 
     ** Clear estimates
