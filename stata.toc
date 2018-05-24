@@ -1,0 +1,3 @@
+v 0.0.1
+d 'Useful Stata Programs': Some small Stata modules
+p usefulPrograms
