@@ -1,10 +1,12 @@
 ** Export balance table to excel
  * v2.0.1
 program diffTable
-    syntax varlist using/ [aweight], BY(varlist max=1) strata(varlist max=1) [sheet(passthru) replace modify *]
+    syntax varlist using/ [aweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
 
-    ** Clear estimates
-    eststo clear
+    if missing("`strata'") {
+        tempvar strata
+        gen `strata' = 1
+    }
 
     ** Open spreadsheet in memory
     putexcel set "`using'",  `sheet' `replace' `modify' open
@@ -15,8 +17,10 @@ program diffTable
 
     qui ds `varlist'
 
+    local vars = `r(varlist)'
+
     ** t-test for each variable
-    foreach var in `r(varlist)' {
+    foreach var in `vars' {
         local lab: variable label `var'
 
         qui sum `var'
@@ -75,13 +79,13 @@ program diffTable
         ** Go to the next row
         local row = `row' + 1
 
-        qui eststo: qui regress `var' i.`by' i.`strata' [`weight'`exp']
+        qui eststo `var': qui regress `var' i.`by' i.`strata' [`weight'`exp']
     }
 
     ** Joint test
      * suest always uses robust standard errors, so I don't need to specify that option
      * here
-    qui suest *
+    qui suest `vars'
     test 1.`by'
 
     ** Print N
