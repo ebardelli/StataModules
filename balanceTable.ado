@@ -99,7 +99,4 @@ program balanceTable
     ** Write the excel spreadsheet
     putexcel close
 
-    ** Clera estimates
-    eststo clear
-
 end
