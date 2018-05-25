@@ -1,5 +1,5 @@
-d 'Useful Stata Programs': Some small Stata modules
+d 'Stata Module': Some small Stata modules I wrote or modified
 d
 F appendModels.ado
-F diffTable.ado
+F balanceTable.ado
 F saveDataset.ado
