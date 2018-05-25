@@ -17,7 +17,7 @@ program balanceTable
     local row = 2
 
     ** t-test for each variable
-    foreach var in "`varlist'" {
+    foreach var in `varlist' {
         local lab: variable label `var'
 
         qui sum `var'
