@@ -1,13 +1,18 @@
 ** Export balance table to excel
- * v2.0.1
+ * v2.1.0
 program balanceTable
     syntax varlist using/ [aweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
     version 15.1
+
+    local _weight = "`weight'"
+    local _exl = "`exp'"
 
     if missing("`strata'") {
         tempvar strata
         gen `strata' = 1
     }
+
+    local models = ""
 
     ** Open spreadsheet in memory
     putexcel set "`using'",  `sheet' `replace' `modify' open
@@ -30,7 +35,7 @@ program balanceTable
         ** Formula for pooled SD comes from this page: https://www.stata.com/statalist/archive/2002-09/msg00054.html
         local SD_pool = sqrt(((r(N_1)-1) * r(sd_1)^2 + (r(N_2)-1) * r(sd_2)^2 )/ r(df_t))
 
-        qui areg `var' i.`by' [`weight'`exp'], a(`strata')
+        qui areg `var' i.`by' [``_weight''``_exp''], a(`strata')
 
         qui lincom 1.`by'
         local diff = r(estimate)
@@ -75,15 +80,17 @@ program balanceTable
 
         ** Go to the next row
         local row = `row' + 1
+        tempname `var'
 
-        qui eststo `var': qui regress `var' i.`by' i.`strata' [`weight'`exp']
+        qui eststo ``var'': qui regress `var' i.`by' i.`strata' [``_weight''``_exp'']
+        local models = "`models' ``var''"
     }
 
     local row = `row' + 1
     ** Joint test
      * suest always uses robust standard errors, so I don't need to specify that option
      * here
-    qui suest `varlist'
+    qui suest `models'
     test 1.`by'
 
     ** Print N
