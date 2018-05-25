@@ -2,6 +2,7 @@
  * v2.0.1
 program balanceTable
     syntax varlist using/ [aweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
+    version 15.1
 
     if missing("`strata'") {
         tempvar strata
