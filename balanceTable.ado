@@ -15,12 +15,8 @@ program balanceTable
     putexcel B1 = "All" C1 = "Control" D1 = "Treatment" E1 = "Diff" F1 = "Effect Size", right
     local row = 2
 
-    qui ds `varlist'
-
-    local vars = "`r(varlist)'"
-
     ** t-test for each variable
-    foreach var in `vars' {
+    foreach var in "`varlist'" {
         local lab: variable label `var'
 
         qui sum `var'
@@ -82,10 +78,11 @@ program balanceTable
         qui eststo `var': qui regress `var' i.`by' i.`strata' [`weight'`exp']
     }
 
+    local row = `row' + 1
     ** Joint test
      * suest always uses robust standard errors, so I don't need to specify that option
      * here
-    qui suest `vars'
+    qui suest `varlist'
     test 1.`by'
 
     ** Print N
