@@ -17,7 +17,7 @@ program balanceTable
 
     qui ds `varlist'
 
-    local vars = `r(varlist)'
+    local vars = "`r(varlist)'"
 
     ** t-test for each variable
     foreach var in `vars' {
