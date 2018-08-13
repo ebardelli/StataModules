@@ -3,7 +3,7 @@
  * channel if sendtoslack is installed
 cap program drop saveDataset
 program saveDataset
-    syntax using/, [label(string) version(string) author(string) slack_id(string) timestamp compress]
+    syntax using/, [label(string) version(string) author(string) timestamp compress]
 
     ** Regex for path from: https://stackoverflow.com/questions/169008/regex-for-parsing-directory-and-filename
     if regexm("`using'", "^(.*/)([^/]*)$") {
@@ -37,11 +37,4 @@ program saveDataset
         gzsave "`path'`filename'", replace s(9)
     }
 
-    ** Send update to Slack channel
-    capture {
-       sendtoslack, ///
-       message("`label' dataset (`filename') has been updated.") ///
-       url("https://hooks.slack.com/services/`slack_id'") ///
-       method(curl)
-    }
 end
