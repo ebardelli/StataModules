@@ -22,7 +22,7 @@ program balanceTable
     local row = 2
 
     ** t-test for each variable
-    foreach var in `varlist' {
+    foreach var of varlist varlist {
         local lab: variable label `var'
 
         qui sum `var'
@@ -38,13 +38,13 @@ program balanceTable
         qui areg `var' i.`by' [``_weight''``_exp''], a(`strata')
 
         qui lincom 1.`by'
-        local diff = r(estimate)
-        local p = r(p)
+        local diff = `r(estimate)'
+        local p = `r(p)'
 
         qui lincom 1.`by' + _cons
-        local treat_mean = r(estimate)
+        local treat_mean = `r(estimate)'
         qui lincom _cons
-        local control_mean = r(estimate)
+        local control_mean = `r(estimate)'
 
         ** This formula is from the Procedures and Standards Handbook: https://ies.ed.gov/ncee/wwc/Docs/referenceresources/wwc_procedures_handbook_v4.pdf
          * p. E-4 (Effect Sizes from Student-Level t-tests or ANCOVA): "WWC computes Hedges’ g as the
