@@ -25,7 +25,7 @@ program balanceTable
     foreach var in `varlist' {
         local lab: variable label `var'
 
-        qui sum `var'
+        qui sum `var' if !missing(`by')
         local all_mean = r(mean)
         local all_N = r(N)
 
