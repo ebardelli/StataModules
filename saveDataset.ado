@@ -3,7 +3,7 @@
  * channel if sendtoslack is installed
 cap program drop saveDataset
 program saveDataset
-    syntax using/, [label(string) version(string) author(string) timestamp compress pigz]
+    syntax using/, [label(string) version(string) author(string) timestamp compress which(passthru)]
 
     ** Regex for path from: https://stackoverflow.com/questions/169008/regex-for-parsing-directory-and-filename
     if regexm("`using'", "^(.*/)([^/]*)$") {
@@ -29,13 +29,13 @@ program saveDataset
         local YY_MD = "`c_year'"+"-" +"`c_md'"
 
         compress
-        gzsave "`path'`YY_MD'_`filename'", replace s(9) `pigz'
+        gzsave "`path'`YY_MD'_`filename'", replace s(9) `which'
     }
 
     compress
     save "`path'`filename'", replace
     if !missing("`compress'") {
-        gzsave "`path'`filename'", replace s(9) `pigz'
+        gzsave "`path'`filename'", replace s(9) `which'
     }
 
 end
