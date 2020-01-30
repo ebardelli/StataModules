@@ -1,5 +1,5 @@
 ** Export balance table to excel
- * v2.1.0
+ * 2020.01.29
 program balanceTable
     syntax varlist using/ [aweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
     version 15.1
@@ -20,6 +20,10 @@ program balanceTable
     ** Set up headers
     putexcel B1 = "All" C1 = "Control" D1 = "Treatment" E1 = "Diff" F1 = "Effect Size", right
     local row = 2
+
+    di _newline
+    di as text "   Variable  {c |}    All   Control   Treat.     Diff    Eff. Size"
+    di as text "{hline 13}{c +}{hline 53}"
 
     ** t-test for each variable
     foreach var in `varlist' {
@@ -55,23 +59,25 @@ program balanceTable
         local eta: di %4.3f `eta'
 
         if `p' < 0.001 {
-            local eta = "`eta'***"
+            local sig = "***"
         }
         else if `p' < 0.01 {
-            local eta = "`eta'**"
+            local sig = "**"
         }
         else if `p' < 0.05 {
-            local eta = "`eta'*"
+            local sig = "*"
         }
         else if `p' < 0.1 {
-            local eta = "`eta'+"
+            local sig = "+"
         }
         else {
-            local eta = "`eta'"
+            local sig = ""
         }
 
         putexcel A`row' = "`lab'" B`row' = (`all_mean') C`row' = (`control_mean') D`row' = (`treat_mean') E`row' = (`diff'), nformat(0.000)
-        putexcel F`row' = ("`eta'"), right
+        putexcel F`row' = ("`eta'`sig'"), right
+
+        output_line "`lab'" `all_mean' `control_mean' `treat_mean' `diff' `eta' "`sig'"
 
         ** Go to the next row
         local row = `row' + 1
@@ -86,24 +92,48 @@ program balanceTable
         local models = "`models' ``var''"
     }
 
+    di as text "{hline 13}{c BT}{hline 53}"
+
     local row = `row' + 1
     ** Joint test
      * suest always uses robust standard errors, so I don't need to specify that option
      * here
     qui suest `models'
-    test 1.`by'
+    qui test 1.`by'
 
     ** Print N
     putexcel A`row' = "N" B`row' = (`all_N') C`row' = (`control_N') D`row' = (`treat_N')
+
+    output_line "N" `all_N' `control_N' `treat_N'
+    di _newline
+
+    ** Print Chi square statistics
     local row = `row' + 1
     putexcel D`row' = "Chi Square" E`row' = `r(chi2)', nformat(0.000)
     local row = `row' + 1
     putexcel D`row' = "Degrees of Freedom" E`row' = `r(df)'
+
     local row = `row' + 1
     putexcel D`row' = "p" E`row' = `r(p)', nformat(0.000)
+
     local row = `row' + 1
+
+    display as text "Joint Test of Significance"
+    display as text "Chi Square:" _col(24) as result %4.3f `r(chi2)'
+    display as text "Degrees of Freedom:" _col(21) as result %4.0f `r(df)'
+    display as text "p:"  _col(24) as result %4.3f `r(p)'
+    display _newline
 
     ** Write the excel spreadsheet
     putexcel close
+end
 
+program output_line
+    args vname all control treat diff eta sig
+    display as text %12s abbrev("`vname'",12) " {c |}" ///
+            as result %8.0g `all' " " ///
+                      %8.0g `control' " " ///
+                      %8.0g `treat' " " ///
+                      %8.0g `diff' " " ///
+                      %8.0g `eta' "`sig'"
 end
