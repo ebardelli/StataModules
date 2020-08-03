@@ -5,3 +5,4 @@ d
 F appendModels.ado
 F balanceTable.ado
 F saveDataset.ado
+F treat_strat.ado
