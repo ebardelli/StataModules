@@ -1,11 +1,11 @@
 ** Export balance table to excel
  * 2020.01.29
 program balanceTable
-    syntax varlist using/ [aweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
+    syntax varlist using/ [aweight fweight pweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
     version 15.1
 
     local _weight = "`weight'"
-    local _exl = "`exp'"
+    local _exp = "`exp'"
 
     if missing("`strata'") {
         tempvar strata
@@ -39,7 +39,7 @@ program balanceTable
         ** Formula for pooled SD comes from this page: https://www.stata.com/statalist/archive/2002-09/msg00054.html
         local SD_pool = sqrt(((r(N_1)-1) * r(sd_1)^2 + (r(N_2)-1) * r(sd_2)^2 )/ r(df_t))
 
-        qui areg `var' i.`by' [``_weight''``_exp''], a(`strata')
+        qui areg `var' i.`by' [`_weight'`_exp'], a(`strata')
 
         qui lincom 1.`by'
         local diff = `r(estimate)'
@@ -88,7 +88,7 @@ program balanceTable
         local row = `row' + 1
         tempname `var'
 
-        qui eststo ``var'': qui regress `var' i.`by' i.`strata' [``_weight''``_exp'']
+        qui eststo ``var'': qui regress `var' i.`by' i.`strata' [`_weight'`_exp']
         local models = "`models' ``var''"
     }
 
