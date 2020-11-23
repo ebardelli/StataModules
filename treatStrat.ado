@@ -1,5 +1,5 @@
 cap program drop treat_strat
-program define treat_strat
+program define treatStrat
     syntax varlist [if] [in], treat(varname) strata(varname)
     foreach var of varlist `varlist' {
         quietly {
