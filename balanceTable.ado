@@ -1,3 +1,28 @@
+/***
+
+# balanceTable
+
+___balanceTable___ exports a balance table to an excel document.
+
+## Syntax
+
+> ___balanceTable___ varlist using _filename_, by(comparison) [options]
+
+### Options
+
+The options are the following:
+
+ - **by**: This option requires a binary variable, where `0` indicates the control 
+           group and `1` indicates the treatment group. The table will report and 
+           compare the means for these two grups.
+ - **strata**:  Optional. It will adjust the means by stratifying on this varialbe.
+ - **sheet**: Optional. Sets the name for the sheet in excel
+ - **replace** or **modify**: Optional. Either replaces or modifies an existing 
+           excel sheet
+ - any _putexcel_ option: You can pass any _putexcel_ option to ___balanceTable___
+
+***/
+
 ** Export balance table to excel
  * 2020.01.29
 program balanceTable
