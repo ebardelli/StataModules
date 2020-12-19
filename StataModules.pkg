@@ -4,6 +4,8 @@ d Distribution-Date: 20201219
 d
 F appendModels.ado
 F balanceTable.ado
+F balanceTable.sthlp
 F saveDataset.ado
 F treatStrat.ado
 F vd.ado
+F vd.sthlp
