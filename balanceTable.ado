@@ -1,26 +1,52 @@
 /***
+_v. 2020.01.29_
 
-# balanceTable
+balanceTable
+============
 
-___balanceTable___ exports a balance table to an excel document.
+__balanceTable__ -- exports a balance table to an excel document.
 
-## Syntax
+Syntax
+------
 
-> ___balanceTable___ varlist using _filename_, by(comparison) [options]
+> __balanceTable__ _varlist_ using _filename_, _by_(_group_) [ _options_]
 
-### Options
+- - -
 
-The options are the following:
-
- - **by**: This option requires a binary variable, where `0` indicates the control 
-           group and `1` indicates the treatment group. The table will report and 
+ - **by**: This option requires a binary variable, where `0` indicates the control
+           group and `1` indicates the treatment group. The table will report and
            compare the means for these two grups.
  - **strata**:  Optional. It will adjust the means by stratifying on this varialbe.
  - **sheet**: Optional. Sets the name for the sheet in excel
- - **replace** or **modify**: Optional. Either replaces or modifies an existing 
+ - **replace** or **modify**: Optional. Either replaces or modifies an existing
            excel sheet
  - any _putexcel_ option: You can pass any _putexcel_ option to ___balanceTable___
 
+
+- - -
+
+
+Example(s)
+----------
+
+    Simple balance table
+        . balanceTable gender gpa using "balance_table.xlsx", by(treat) replace
+
+    Stratified balance table
+        . balanceTable gender gpa using "balance_table_class.xlsx", by(treat) strata(classroom) replace
+
+
+Author
+------
+
+Emabyuele Bardelli
+University of Michigan - School of Education
+bardelli@umich.edu
+
+- - -
+
+This help file was dynamically produced by
+[MarkDoc Literate Programming package](http://www.haghish.com/markdoc/)
 ***/
 
 ** Export balance table to excel
