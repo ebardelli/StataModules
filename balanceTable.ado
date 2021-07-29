@@ -1,5 +1,5 @@
 /***
-_v. 2020.01.29_
+_v. 2021.07.29_
 
 balanceTable
 ============
@@ -50,10 +50,10 @@ This help file was dynamically produced by
 ***/
 
 ** Export balance table to excel
- * 2020.01.29
+ * 2021.09.29
 program balanceTable
     syntax varlist using/ [aweight fweight pweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
-    version 15.1
+    version 15.0
 
     local _weight = "`weight'"
     local _exp = "`exp'"
@@ -66,7 +66,12 @@ program balanceTable
     local models = ""
 
     ** Open spreadsheet in memory
-    putexcel set "`using'",  `sheet' `replace' `modify' open
+    if `c(version)' > 15 {
+        putexcel set "`using'",  `sheet' `replace' `modify' open
+    } 
+    else {
+        putexcel set "`using'",  `sheet' `replace' `modify'
+    }
 
     ** Set up headers
     putexcel B1 = "All" C1 = "Control" D1 = "Treatment" E1 = "Diff" F1 = "Effect Size", right
@@ -94,7 +99,12 @@ program balanceTable
 
         qui lincom 1.`by'
         local diff = `r(estimate)'
-        local p = `r(p)'
+        if "`r(p)'" == "" {
+            local p = 2*ttail(`r(df)', `r(estimate)'/`r(se)')
+        }
+        else {
+            local p = `r(p)'
+        }
 
         qui lincom 1.`by' + _cons
         local treat_mean = `r(estimate)'
@@ -125,15 +135,15 @@ program balanceTable
             local sig = ""
         }
 
-        putexcel A`row' = "`lab'" B`row' = (`all_mean') C`row' = (`control_mean') D`row' = (`treat_mean') E`row' = (`diff'), nformat(0.000)
-        putexcel F`row' = ("`eta'`sig'"), right
+        quietly putexcel A`row' = "`lab'" B`row' = (`all_mean') C`row' = (`control_mean') D`row' = (`treat_mean') E`row' = (`diff'), nformat(0.000)
+        quietly putexcel F`row' = ("`eta'`sig'"), right
 
-        output_line "`lab'" `all_mean' `control_mean' `treat_mean' `diff' `eta' "`sig'"
+        _output_line "`lab'" `all_mean' `control_mean' `treat_mean' `diff' `eta' "`sig'"
 
         ** Go to the next row
         local row = `row' + 1
         ** Print N
-        putexcel A`row' = "N" B`row' = (`all_N') C`row' = (`control_N') D`row' = (`treat_N')
+        quietly putexcel A`row' = "N" B`row' = (`all_N') C`row' = (`control_N') D`row' = (`treat_N')
 
         ** Go to the next row
         local row = `row' + 1
@@ -153,19 +163,19 @@ program balanceTable
     qui test 1.`by'
 
     ** Print N
-    putexcel A`row' = "N" B`row' = (`all_N') C`row' = (`control_N') D`row' = (`treat_N')
+    quietly putexcel A`row' = "N" B`row' = (`all_N') C`row' = (`control_N') D`row' = (`treat_N')
 
-    output_line "N" `all_N' `control_N' `treat_N'
+    _output_line "N" `all_N' `control_N' `treat_N'
     di _newline
 
     ** Print Chi square statistics
     local row = `row' + 1
-    putexcel D`row' = "Chi Square" E`row' = `r(chi2)', nformat(0.000)
+    quietly putexcel D`row' = "Chi Square" E`row' = `r(chi2)', nformat(0.000)
     local row = `row' + 1
-    putexcel D`row' = "Degrees of Freedom" E`row' = `r(df)'
+    quietly putexcel D`row' = "Degrees of Freedom" E`row' = `r(df)'
 
     local row = `row' + 1
-    putexcel D`row' = "p" E`row' = `r(p)', nformat(0.000)
+    quietly putexcel D`row' = "p" E`row' = `r(p)', nformat(0.000)
 
     local row = `row' + 1
 
@@ -176,10 +186,12 @@ program balanceTable
     display _newline
 
     ** Write the excel spreadsheet
-    putexcel close
+    if `c(version)' > 15 {
+        putexcel close
+    }
 end
 
-program output_line
+program _output_line
     args vname all control treat diff eta sig
     display as text %12s abbrev("`vname'",12) " {c |}" ///
             as result %8.0g `all' " " ///
