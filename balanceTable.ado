@@ -9,7 +9,7 @@ __balanceTable__ -- exports a balance table to an excel document.
 Syntax
 ------
 
-> __balanceTable__ _varlist_ using _filename_, _by_(_group_) [ _options_]
+> __balanceTable__ _varlist_ using _filename_, by(group) [ _options_]
 
 - - -
 

@@ -1,5 +1,5 @@
 {smcl}
-{it:v. 2020.01.29}
+{it:v. 2021.07.29}
 
 
 {title:balanceTable}
@@ -10,7 +10,7 @@
 
 {title:Syntax}
 
-{p 8 8 2} {bf:balanceTable} {it:varlist} using {it:filename}, {it:by_({it:group}) [ {it:options}]
+{p 8 8 2} {bf:balanceTable} {it:varlist} using {it:filename}, by(group) [ {it:options}]
 
 {space 4}{hline}
 
