@@ -25,6 +25,18 @@ program appendModels, eclass
         if `cons'<. & `cons'>1 {
             mat `tmp' = `tmp'[1,1..`cons'-1]
         }
+		** Set column names
+		local names: colnames `tmp'
+		local new_names  = ""
+		foreach name of local names {
+			if "`new_names'" == "" {
+				local new_names = "`name'_`e(depvar)'"
+			}
+			else {
+				local new_names  = "`new_names' `name'_`e(depvar)'"
+			}
+		}
+		mat coln `tmp' = `new_names'
         ** Append to the point estimate matrix
         mat `b' = (nullmat(`b') , `tmp')
         ** Prepare variance matrix
@@ -52,13 +64,8 @@ program appendModels, eclass
     mat coln `V' = `names'
     mat rown `V' = `names'
 
-    ** Reset equation names because we just keep the first one
-    matrix colnames `b' = _:
-    matrix colnames `V' = _:
-    matrix rownames `V' = _:
-
     ** Post results
     eret post `b' `V'
     eret scalar N = ``N''
-    eret local cmd "whatever"
+    eret local cmd "appendModels `namelist'"
 end
