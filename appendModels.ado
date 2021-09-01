@@ -5,7 +5,7 @@
 program appendModels, eclass
     // using first equation of model
     version 8
-    syntax namelist
+    syntax namelist, [outcome]
     tempname b V tmp N
     local `N' = .
     foreach name of local namelist {
@@ -28,14 +28,26 @@ program appendModels, eclass
 		** Set column names
 		local names: colnames `tmp'
 		local new_names  = ""
-		foreach name of local names {
-			if "`new_names'" == "" {
-				local new_names = "`name'_`e(depvar)'"
-			}
-			else {
-				local new_names  = "`new_names' `name'_`e(depvar)'"
-			}
-		}
+        if "`outcome'" != "" { 
+            foreach name of local names {
+                if "`new_names'" == "" {
+                    local new_names = "`name'_`e(depvar)'"
+                }
+                else {
+                    local new_names  = "`new_names' `name'_`e(depvar)'"
+                }
+            }
+        }
+        else {
+            foreach name of local names {
+                if "`new_names'" == "" {
+                    local new_names = "`name'"
+                }
+                else {
+                    local new_names  = "`new_names' `name'"
+                }
+            }
+        }
 		mat coln `tmp' = `new_names'
         ** Append to the point estimate matrix
         mat `b' = (nullmat(`b') , `tmp')
@@ -67,5 +79,6 @@ program appendModels, eclass
     ** Post results
     eret post `b' `V'
     eret scalar N = ``N''
+    eret local depvar = "`e(depvar)'"
     eret local cmd "appendModels `namelist'"
 end
