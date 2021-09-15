@@ -180,14 +180,14 @@ program balanceTable
     local row = `row' + 1
 
     display as text "Joint Test of Significance"
-    display as text "Chi Square:" _col(24) as result %4.3f `r(chi2)'
-    display as text "Degrees of Freedom:" _col(21) as result %4.0f `r(df)'
+    display as text "Chi Square:" _col(25) as result %4.3f `r(chi2)'
+    display as text "Degrees of Freedom:" _col(25) as result %4.0f `r(df)'
     display as text "p:"  _col(24) as result %4.3f `r(p)'
     display _newline
 
     ** Write the excel spreadsheet
     if `c(version)' > 15 {
-        putexcel close
+        putexcel save
     }
 end
 
@@ -200,3 +200,4 @@ program _output_line
                       %8.0g `diff' " " ///
                       %8.0g `eta' "`sig'"
 end
+
