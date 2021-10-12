@@ -1,6 +1,6 @@
 d 'Stata Module': Some small Stata modules I wrote or modified
 d
-d Distribution-Date: 20210915
+d Distribution-Date: 20211012
 d
 F appendModels.ado
 F balanceTable.ado
@@ -10,3 +10,4 @@ F saveDataset.ado
 F treatStrat.ado
 F vd.ado
 F vd.sthlp
+F xlscol.ado

@@ -1,4 +1,4 @@
-v 0.0.11
+v 0.0.12
 d 'Useful Stata Programs': Some small Stata modules
-d Distribution-Date: 20210915
+d Distribution-Date: 20211012
 p StataModules
