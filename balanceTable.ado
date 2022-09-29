@@ -1,5 +1,5 @@
 /***
-_v. 2022.08.27_
+_v. 2022.09.29_
 
 balanceTable
 ============
@@ -9,12 +9,14 @@ __balanceTable__ -- exports a balance table to an excel document.
 Syntax
 ------
 
-> __balanceTable__ _varlist_ [using _filename_], by(group) [ _options_]
+> __balanceTable__ _varlist_ [if] [in] [using _filename_], by(group) [ _options_]
 
 - - -
 
  - **using**: Optional. This is the name of an excel spreadsheet that will report the
               balance table results.
+ - **if** and **in**: Optional. These options do the same thing as they do in standard
+                      Stata programs.
  - **by**: This option requires a binary variable, where `0` indicates the control
            group and `1` indicates the treatment group. The table will report and
            compare the means for these two grups.
@@ -57,9 +59,9 @@ This help file was dynamically produced by
 ***/
 
 ** Export balance table to excel
- * 2021.09.29
+ * 2022.09.29
 program balanceTable, eclass
-    syntax varlist [using/] [aweight fweight pweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
+    syntax varlist [using/] [if] [in] [aweight fweight pweight], BY(varlist max=1) [strata(varlist max=1) sheet(passthru) replace modify *]
     version 15.0
 
     local _weight = "`weight'"
@@ -100,17 +102,17 @@ program balanceTable, eclass
     foreach var in `varlist' {
         local lab: variable label `var'
 
-        qui sum `var' if !missing(`by')
+        qui sum `var' `if' `in'
         local all_mean = r(mean)
         local all_N = r(N)
 
-        qui ttest `var', by(`by')
+        qui ttest `var' `if' `in', by(`by')
         local control_N = r(N_1)
         local treat_N = r(N_2)
         ** Formula for pooled SD comes from this page: https://www.stata.com/statalist/archive/2002-09/msg00054.html
         local SD_pool = sqrt(((r(N_1)-1) * r(sd_1)^2 + (r(N_2)-1) * r(sd_2)^2 )/ r(df_t))
 
-        qui areg `var' i.`by' [`_weight'`_exp'], a(`strata')
+        qui areg `var' i.`by'  `if' `in' [`_weight'`_exp'], a(`strata')
 
         qui lincom 1.`by'
         local diff = `r(estimate)'
@@ -170,7 +172,7 @@ program balanceTable, eclass
         }
         tempname `var'
 
-        qui eststo ``var'': qui regress `var' i.`by' i.`strata' [`_weight'`_exp']
+        qui eststo ``var'': qui regress `var' i.`by' i.`strata'  `if' `in' [`_weight'`_exp']
         local models = "`models' ``var''"
     }
 
