@@ -1,7 +1,8 @@
 d 'Stata Module': Some small Stata modules I wrote or modified
 d
-d Distribution-Date: 20220827
+d Distribution-Date: 20221218
 d
+F adjust_V_ccr.ado
 F appendModels.ado
 F balanceTable.ado
 F balanceTable.sthlp
