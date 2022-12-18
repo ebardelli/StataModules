@@ -7,6 +7,7 @@ F balanceTable.ado
 F balanceTable.sthlp
 F binPlot.ado
 F calculate_CCV.ado
+F calculate_CCV.sthlp
 F saveDataset.ado
 F treatStrat.ado
 F vd.ado
