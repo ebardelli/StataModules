@@ -2,15 +2,15 @@
 {it:v. 2022.12.18}
 
 
-{title:calculate_V_ccr}
+{title:calculate_CCV}
 
 {p 4 4 2}
-calculate_V_ccr -- calculates the causal cluster variance matrix for a fixed effects regression model
+calculate_CCV -- calculates the causal cluster variance matrix for a fixed effects regression model
 
 
 {title:Syntax}
 
-{p 8 8 2} calculate_V_ccr, est_robust(model name) est_cluster(model name) treat(varname) fe(varname)
+{p 8 8 2} calculate_CCV, est_robust(model name) est_cluster(model name) treat(varname) fe(varname)
 
 {space 4}{hline}
 {break}    {space 1}- {ul:est_robust} and {ul:est_cluster}: Model names for the regression models estimated

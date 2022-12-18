@@ -2,11 +2,11 @@ d 'Stata Module': Some small Stata modules I wrote or modified
 d
 d Distribution-Date: 20221218
 d
-F adjust_V_ccr.ado
 F appendModels.ado
 F balanceTable.ado
 F balanceTable.sthlp
 F binPlot.ado
+F calculate_CCV.ado
 F saveDataset.ado
 F treatStrat.ado
 F vd.ado

@@ -1,15 +1,15 @@
 /***
 _v. 2022.12.18_
 
-calculate_V_ccr
-===============
+calculate_CCV
+=============
 
-calculate_V_ccr -- calculates the causal cluster variance matrix for a fixed effects regression model
+calculate_CCV -- calculates the causal cluster variance matrix for a fixed effects regression model
 
 Syntax
 ------
 
-> calculate_V_ccr, est_robust(model name) est_cluster(model name) treat(varname) fe(varname)
+> calculate_CCV, est_robust(model name) est_cluster(model name) treat(varname) fe(varname)
 
 - - -
  - **est_robust** and **est_cluster**: Model names for the regression models estimated
@@ -36,7 +36,7 @@ bardelli@brown.edu
 This help file was dynamically produced by
 [MarkDoc Literate Programming package](http://www.haghish.com/markdoc/)
 ***/
-program define calculate_V_ccr, eclass
+program define calculate_CCV, eclass
     syntax, est_robust(string) est_cluster(string) treat(string) fe(string)
     quietly {
     ** Save variance matrices from robust and clustered models
