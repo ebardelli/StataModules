@@ -1,5 +1,5 @@
 {smcl}
-{it:v. 2022.08.27}
+{it:v. 2022.09.29}
 
 
 {title:balanceTable}
@@ -10,12 +10,14 @@
 
 {title:Syntax}
 
-{p 8 8 2} {bf:balanceTable} {it:varlist} [using {it:filename}], by(group) [ {it:options}]
+{p 8 8 2} {bf:balanceTable} {it:varlist} [if] [in] [using {it:filename}], by(group) [ {it:options}]
 
 {space 4}{hline}
 
 {break}    {space 1}- {ul:using}: Optional. This is the name of an excel spreadsheet that will report the
               balance table results.
+{break}    {space 1}- {ul:if} and {ul:in}: Optional. These options do the same thing as they do in standard
+                      Stata programs.
 {break}    {space 1}- {ul:by}: This option requires a binary variable, where {c 96}0{c 96} indicates the control
            group and `1` indicates the treatment group. The table will report and
            compare the means for these two grups.
