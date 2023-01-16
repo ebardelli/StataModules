@@ -76,8 +76,8 @@ program balanceTable, eclass
 
     ** Setup return matrix
     tempname mat
-    matrix `mat' = J(1,6,.)
-    matrix colnames `mat' = overall_mean control_mean treat_mean diff e_size prob
+    matrix `mat' = J(1,9,.)
+    matrix colnames `mat' = overall_mean control_mean treat_mean diff e_size prob control_N treat_N all_N
 
 
     ** Open spreadsheet in memory
@@ -155,7 +155,7 @@ program balanceTable, eclass
          _output_line "`lab'" `all_mean' `control_mean' `treat_mean' `diff' `eta' "`sig'"
 
         local rnames : rownames `mat'
-        matrix `mat' = (`mat' \ `all_mean', `control_mean', `treat_mean', `diff', `eta', `p')
+        matrix `mat' = (`mat' \ `all_mean', `control_mean', `treat_mean', `diff', `eta', `p', `control_N', `treat_N', `all_N')
         matrix rownames `mat' = `rnames' `var'
 
         if !missing("`using'") {
